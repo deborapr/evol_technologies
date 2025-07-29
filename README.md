@@ -12,16 +12,10 @@ The dynamics starts from the state $t=0$, with $E(t=0)=E_0$ and $N(t=0)=N_0(E_0)
 
 Computationally, we implement the following algorithm: 
 
-    1. Build an ensemble of $T$ technologies $(\gamma_t,\theta_t)$, with parameters $q$ and $d$ fixed and common to all of them;
-    
+    1. Build an ensemble of _T_ technologies \gamma_t,\theta_t, with parameters $q$ and $d$ fixed and common to all of them;
     2. Calculate $\tau_t = \gamma_t/\theta_t$, and sort all technologies in increasing order of $\tau_t$;
-    
     3. Looping over the sorted list from $t=1$ to $T$, attempt to activate each technology:
-    
         a. (*)Compute the accumulated variables $\Theta$, $\Gamma$, $\Delta$, $\Psi$, $\Phi$, as well as the derived quantities $\chi$  and $\Sigma$, and determine the corresponding equilibrium values of $E$ and $N$;
-        
         b. For the technology under evaluation, check the condition in Eq.~\ref{eq:tau_theta_gamma}. If the condition is not satisfied, exclude the technology from the current set, recompute the accumulated variables without it, and list it as pending;
-        
         c. If the condition is satisfied, re-evaluate all previously pending technologies in the same order, using the updated system state (repeat from step * for each one).
-        
     4.  Continue this process until the entire ensemble has been evaluated. The algorithm yields the final state with $n_s$ active technologies, the equilibrium values $E$ and $N$, and the highest accepted value of $\tau_t$.
