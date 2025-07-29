@@ -17,5 +17,5 @@ Computationally, we implement the following algorithm:
     1. **(*)** Compute the accumulated variables $\Theta$, $\Gamma$, $\Delta$, $\Psi$, $\Phi$, as well as the derived quantities $\chi$ and $\Sigma$, and determine the corresponding equilibrium values of $E$ and $N$.
     2. For the technology under evaluation, check the condition in Eq.~\ref{eq:tau_theta_gamma}. If the condition is not satisfied, exclude the technology from the current set, recompute the accumulated variables without it, and list it as pending.
     3. If the condition is satisfied, re-evaluate all previously pending technologies in the same order, using the updated system state (repeat from step **(*)** for each one).
-4. Continue this process until the entire ensemble has been evaluated. The algorithm yields the final state with $n_s$ active technologies, the equilibrium values $E$ and $N$, and the highest accepted value of $\t_
+4. Continue this process until the entire ensemble has been evaluated. The algorithm yields the final state with $n_s$ active technologies, the equilibrium values $E$ and $N$, and the highest accepted value of $\tau_t$.
 
