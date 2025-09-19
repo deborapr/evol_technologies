@@ -6,16 +6,20 @@ In this work, we introduce a model of genuine open-ended technological innovatio
 
 **Algorithm for numerical simulations**
 
-Time is measured in terms of innovations, i.e., at time $t$ the number of technologies introduced is $t$. In order to convert to real time, one needs to draw exponential random time intervals from the exponential distribution with mean $(\lambda N)^{-1}$, and sum them up.
+Time is measured in terms of innovations; that is, at time $t$, the number of technologies introduced is $t$. To convert to real time, one must draw random time intervals from an exponential distribution with mean $(\lambda N)^{-1}$ and sum them cumulatively.
 
-The dynamics starts from the state $t=0$, with $E(t=0)=E_0$ and $N(t=0)=N_0(E_0)$. Then, the process proceeds sequentially: a technology is drawn at random with parameters given from exponential probability distributions, and its stability is checked via the condition $\gamma_t/\theta_t \leq \tau$. If condition is not met, the time is incremented, $t=t+1$, and a new technology is drawn. If the condition is satisfied, the new equilibrium values of $E$ and $N$ are computed, along with the updated threshold $\tau$. One must then verify whether the status (active/inactive) of any previously introduced technology has changed, computing all relevant quantities self-consistently. After convergence, time is incremented again and the process continues with the next technology.
+For each realization, the dynamics starts from the state $t=0$, with $E(t=0)=E_0$ and $N(t=0)=N_0(E_0)$, and fixed model parameters $q$ and $d$. 
+Starting from a state with no active technologies ($n_s = 0$), we attempt to activate technologies sequentially.
+At each step, we compute the updated equilibrium values of the environment and population, and check if the next technology satisfies the activation condition, i.e., whether it can successfully invade. The process stops as soon as this condition is no longer met.
 
-Computationally, we implement the following algorithm: 
-1. Build an ensemble of $T$ technologies $\gamma_t$, $\theta_t$, with parameters $q$ and $d$ fixed and common to all of them.
-2. Calculate $\tau_t = \gamma_t / \theta_t$, and sort all technologies in increasing order of $\tau_t$.
-3. Loop over the sorted list from $t = 1$ to $T$, attempting to activate each technology:
-    1. **(*)** Compute the accumulated variables $\Theta$, $\Gamma$, $\Delta$, $\Psi$, $\Phi$, as well as the derived quantities $\chi$ and $\Sigma$, and determine the corresponding equilibrium values of $E$ and $N$.
-    2. For the technology under evaluation, check the condition in Eq.~\ref{eq:tau_theta_gamma}. If the condition is not satisfied, exclude the technology from the current set, recompute the accumulated variables without it, and list it as pending.
-    3. If the condition is satisfied, re-evaluate all previously pending technologies in the same order, using the updated system state (repeat from step **(*)** for each one).
-4. Continue this process until the entire ensemble has been evaluated. The algorithm yields the final state with $n_s$ active technologies, the equilibrium values $E$ and $N$, and the highest accepted value of $\tau_t$.
+Computationally, the procedure is as follows:
+
+1. Generate an ensemble of $T$ technologies $(\gamma_t, \theta_t)$, sampled independently from exponential distributions with means $\bar{\gamma}$ and $\bar{\theta}$, respectively.
+2. Compute $\tau_t = \gamma_t / \theta_t$, and sort the technologies in increasing order of $\tau_t$.
+3. Loop through the sorted list, attempting to activate one technology at a time:
+    1. **(*)** Increment the counter: $n_s \leftarrow n_s + 1$, and consider the technology  $\tau_{n_s}$. Compute the accumulated variables $\Theta$, $\Gamma$, $\Delta$, $\Psi$, and $\Phi$, the derived quantities $\chi$, $\Omega$, and $\Sigma$, and determine the corresponding equilibrium values of $E$ and $N$;
+    2. Compute the updated threshold $\tau$, and check whether the next technology satisfies the activation condition given by Eq.~\ref{eq:tau_theta_gamma}: $\tau_{n_s + 1} \leq \tau$;
+    3. If the condition is violated, stop the process and proceed to the next realization. Store the current values of the environment, population, and the last successfully activated $\tau_t$. Otherwise, return to step **(*)**.
+
+The algorithm yields, for each realization, the final number of active technologies $n_s$, the equilibrium values of $E$ and $N$, and the highest accepted value of $\tau_t$. We performed 100 realizations for each set of parameters. 
 
